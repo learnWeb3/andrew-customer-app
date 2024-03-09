@@ -1,0 +1,51 @@
+{
+  "name": "andrew-customer-app",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+  },
+  "dependencies": {
+    "@axa-fr/react-oidc": "^7.13.16-alpha.1275",
+    "@emotion/cache": "latest",
+    "@emotion/react": "latest",
+    "@emotion/server": "latest",
+    "@emotion/styled": "latest",
+    "@fontsource/roboto": "^5.0.8",
+    "@googlemaps/js-api-loader": "^1.16.2",
+    "@mui/icons-material": "latest",
+    "@mui/material": "latest",
+    "@mui/x-data-grid": "^6.18.2",
+    "@mui/x-date-pickers": "^6.18.2",
+    "@reduxjs/toolkit": "^2.1.0",
+    "apexcharts": "^3.44.0",
+    "autosuggest-highlight": "^3.3.4",
+    "axios": "^1.6.7",
+    "dayjs": "^1.11.10",
+    "jwt-decode": "^4.0.0",
+    "mqtt": "^5.3.6",
+    "nanoid": "^5.0.6",
+    "next": "latest",
+    "react": "latest",
+    "react-apexcharts": "^1.4.1",
+    "react-dom": "^18.2.0",
+    "react-redux": "^9.1.0",
+    "react-toastify": "^10.0.4",
+    "uuid": "^9.0.1",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "@types/autosuggest-highlight": "^3.2.3",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "^18.2.17",
+    "@types/validator": "^13.11.8",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "typescript": "latest"
+  }
+}
