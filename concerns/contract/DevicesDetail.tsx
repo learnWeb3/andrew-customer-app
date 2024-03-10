@@ -18,8 +18,8 @@ export interface DevicesDetailProps {
 export function DevicesDetail({ contract }: DevicesDetailProps) {
   const columns: GridColDef[] = [
     {
-      field: "ref",
-      headerName: "Ref",
+      field: "serialNumber",
+      headerName: "Serial number",
       flex: 1.5,
       renderCell: RenderCellLink,
     },
@@ -36,34 +36,6 @@ export function DevicesDetail({ contract }: DevicesDetailProps) {
       headerName: "Vehicle",
       flex: 1.5,
       renderCell: RenderCellLink,
-    },
-    {
-      field: "incidentCount",
-      headerName: "Incident count",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "dataPointCount",
-      headerName: "Transmission count",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "drivingTimeMs",
-      headerName: "Driving time",
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-      renderCell: RenderCellDuration,
-    },
-    {
-      field: "lastTransmissionDate",
-      headerName: "Last transmission",
-      flex: 1,
-      renderCell: RenderCellDate,
     },
     {
       field: "createdAt",
@@ -84,7 +56,21 @@ export function DevicesDetail({ contract }: DevicesDetailProps) {
     if (contract && accessToken) {
       findContractDevices(contract, accessToken).then((data) => {
         // console.log(data);
-        setDevices(data);
+        setDevices({
+          ...data,
+          results: data.results.map((device) => ({
+            id: device._id,
+            serialNumber: {
+              label: device.serialNumber,
+              href: `/devices/${device._id}`,
+            },
+            status: device.status,
+            vehicle: {
+              label: device.vehicle.vin,
+              href: `/vehicles/${device.vehicle.vin}`,
+            },
+          })),
+        });
       });
     }
   }, [contract, accessToken]);

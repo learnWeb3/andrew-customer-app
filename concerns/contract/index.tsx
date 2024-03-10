@@ -1,6 +1,5 @@
 import { Grid, Typography } from "@mui/material";
 import Breadcrumb from "../../components/Breadcrumb";
-import { useRouter } from "next/router";
 import { DevicesDetail } from "./DevicesDetail";
 import { VehiclesDetail } from "./VehiclesDetail";
 import { ContractDetail } from "./ContractDetail";
@@ -8,10 +7,16 @@ import { ContractStatus } from "../../lib/contract-status.enum";
 import { useEffect, useState } from "react";
 import { ContractStatusDropdown } from "./ContractStatusDropdown";
 import { useOidcAccessToken } from "@axa-fr/react-oidc";
-import { findContract } from "../../services/andrew-api.service";
+import {
+  findContract,
+  findContractVehicles,
+} from "../../services/andrew-api.service";
 import { Contract } from "../../lib/contract.interface";
 import { AlertStatus } from "./AlertStatus";
 import { ProceedToCheckout } from "./ProceedToCheckout";
+import { ContractStatistics } from "./ContractStatistics";
+import { PaginatedResults } from "../../lib/paginated-results.interface";
+import { Vehicle } from "../../lib/vehicle.interface";
 
 export interface ContractConcernProps {
   id: string | null;
@@ -20,11 +25,26 @@ export function ContractConcern({ id }: ContractConcernProps) {
   const { accessToken } = useOidcAccessToken();
   const [contract, setContract] = useState<Contract | null>(null);
 
+  const [vehicles, setVehicles] = useState<PaginatedResults<Vehicle>>({
+    start: 0,
+    limit: 10,
+    results: [],
+    count: 0,
+  });
+
   useEffect(() => {
     if (accessToken && id) {
       findContract(id, accessToken).then((data) => setContract(data));
     }
   }, [id, accessToken]);
+
+  useEffect(() => {
+    if (contract?._id && accessToken) {
+      findContractVehicles(contract?._id, accessToken).then((data) => {
+        setVehicles(data);
+      });
+    }
+  }, [contract, accessToken]);
   return (
     <Grid container spacing={4} alignItems="flex-start">
       <Grid item xs={12}>
@@ -67,9 +87,16 @@ export function ContractConcern({ id }: ContractConcernProps) {
         )}
       </Grid>
 
-      {/* <Grid item xs={12}>
-        <ContractStatistics />
-      </Grid> */}
+      <Grid item xs={12}>
+        {vehicles ? (
+          <ContractStatistics
+            vehiclesVIN={vehicles.results.map((vehicle) => vehicle.vin)}
+            from={Date.now() - 365 * 2 * 24 * 60 * 60 * 1000}
+          />
+        ) : (
+          false
+        )}
+      </Grid>
 
       {contract ? (
         <Grid item xs={12}>

@@ -34,7 +34,7 @@ export function VehiclesDetail({ contract }: VehiclesDetailProps) {
 
       {vehicles?.results.map((vehicle, index) => (
         <VehicleInformations
-          key={index}
+          key={`contract-${contract}-vehicles-${index}`}
           readOnly={true}
           label={`Vehicle n°${index + 1}`}
           vehicle={vehicle}

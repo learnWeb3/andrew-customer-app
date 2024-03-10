@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: andrew-customer-ingress
+  annotations:
+    cert-manager.io/issuer: cert-manager-andrew-staging-issuer
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - andrew.customers.students-epitech.ovh
+      secretName: tls-andrew-customer
+  rules:
+    - host: andrew.customers.students-epitech.ovh
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: andrew-customer-service
+                port:
+                  number: 3000

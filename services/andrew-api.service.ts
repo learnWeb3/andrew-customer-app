@@ -6,6 +6,7 @@ import { Contract } from "../lib/contract.interface";
 import { PaginatedResults } from "../lib/paginated-results.interface";
 import { Vehicle } from "../lib/vehicle.interface";
 import { Notification } from "../lib/notification.interface";
+import { DeviceStatus } from "../lib/device-status.enum";
 
 const andrewApi = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_ROOT_URL,
@@ -491,5 +492,44 @@ export async function listUserNotifications(
         headers,
       }
     )
+    .then((response) => response.data);
+}
+
+export async function findDevice(id: string, accessToken: string) {
+  const endpoint = `/device/${id}`;
+  const headers = {
+    ...getAuthorizationHeaders(accessToken),
+  };
+
+  return andrewApi
+    .get(endpoint, {
+      headers,
+    })
+    .then((response) => response.data);
+}
+
+export async function listDevices(
+  accessToken: string,
+  status: DeviceStatus = DeviceStatus.PAIRED,
+  pagination: { start: number; limit: number } = { start: 0, limit: 10 },
+  searchFilters: { value: string } | {} = {}
+) {
+  const endpoint = `/device`;
+  const headers = {
+    ...getAuthorizationHeaders(accessToken),
+  };
+
+  const queryParams = new URLSearchParams({
+    start: pagination.start.toString(),
+    limit: pagination.limit.toString(),
+    status,
+    ...searchFilters,
+  });
+  const queryString = queryParams.toString();
+
+  return andrewApi
+    .get(endpoint + "?" + queryString, {
+      headers,
+    })
     .then((response) => response.data);
 }

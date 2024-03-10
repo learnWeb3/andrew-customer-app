@@ -55,6 +55,7 @@ export function GaugeChart({
       type: "radialBar",
       offsetY: -10,
     },
+    labels: ["Progress"],
     plotOptions: {
       radialBar: {
         startAngle: -135,

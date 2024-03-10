@@ -2,6 +2,10 @@
 
 This repository contains the code related to the Andrew Insurance customer front facing application.
 
+## Online solution
+
+[Andrew customer deployed application](https://andrew.customers.students-epitech.ovh)
+
 ## APIs documentation
 
 - [API postman collection online](https://documenter.getpostman.com/view/13953520/2s9YeHbrPg#intro)
@@ -72,6 +76,13 @@ III. An insurer review the subscription application and can directly update the 
 - jack.williams@yopmail.com - user
 - mike@yopmail.com - user
 
+
+## Build docker image 
+
+```bash
+# build the image 
+docker build -t <repository>/andrew-customer:<DD>-<MM>-<YYYY>.<UNIQUE ID> .
+```
 
 ## Quick start
 
