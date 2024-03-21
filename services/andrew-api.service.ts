@@ -7,12 +7,41 @@ import { PaginatedResults } from "../lib/paginated-results.interface";
 import { Vehicle } from "../lib/vehicle.interface";
 import { Notification } from "../lib/notification.interface";
 import { DeviceStatus } from "../lib/device-status.enum";
+import { OidcClient } from "@axa-fr/react-oidc";
+import { configuration } from "../components/AuthenticatedLayout";
 
 const andrewApi = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_ROOT_URL,
   timeout: 10000,
   headers: { "Content-Type": "application/json" },
 });
+
+andrewApi.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async function (error) {
+    const originalRequest = error.config;
+    if (error.response.status === 403 && !originalRequest._retry) {
+      try {
+        originalRequest._retry = true;
+        const oidc = OidcClient.getOrCreate(() => fetch)(configuration);
+        await oidc.renewTokensAsync();
+        const getValidToken = await oidc.getValidTokenAsync();
+        if (!getValidToken || !getValidToken.isTokensValid) {
+          return oidc.loginAsync(undefined, undefined);
+        }
+        const access_token = getValidToken?.tokens?.accessToken;
+        andrewApi.defaults.headers.common["Authorization"] =
+          "Bearer " + access_token;
+        return andrewApi(originalRequest);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export function getAuthorizationHeaders(accessToken: string) {
   return {

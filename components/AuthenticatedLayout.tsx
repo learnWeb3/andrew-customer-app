@@ -16,7 +16,7 @@ export interface AuthenticatedLayoutProps extends PropsWithChildren {
   onlyAuth?: boolean;
 }
 
-const configuration = {
+export const configuration = {
   client_id: process.env.NEXT_PUBLIC_OIDC_CLIENT_ID as string,
   redirect_uri:
     process.env.NEXT_PUBLIC_FRONTEND_URL + "/#authentication/callback",
