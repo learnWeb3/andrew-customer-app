@@ -7,10 +7,7 @@ import { RenderCellLink } from "../../components/Datatable/RenderCellLink";
 import { RenderCellApplicationSatus } from "../../components/Datatable/RenderCellStatus";
 import { RenderCellDate } from "../../components/Datatable/RenderCellDate";
 import { NewButton } from "../../components/NewButton";
-import { useToggledState } from "../../hooks/useToggledState";
-import { ModalWrapper } from "../../components/ModalWrapper";
 import { ApplicationStatus } from "../../lib/application-status.enum";
-import { UpdateSubscriptionApplication } from "../application/UpdateSubscriptionApplication/index";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useOidcAccessToken } from "@axa-fr/react-oidc";
@@ -25,11 +22,15 @@ import { usePagination } from "../../hooks/usePagination";
 import { useDebounce } from "../../hooks/useDebounce";
 
 export interface ApplicationsConcernProps {
-  initialSearchFiltersStatus?: ApplicationStatus;
+  searchFilters: {
+    status: ApplicationStatus;
+  };
+  setSearchFilters: (searchFilters: { status: ApplicationStatus }) => void;
 }
 
 export function ApplicationsConcern({
-  initialSearchFiltersStatus = ApplicationStatus.PENDING,
+  searchFilters = { status: ApplicationStatus.PENDING },
+  setSearchFilters = (newFilters) => {},
 }: ApplicationsConcernProps) {
   const columns: GridColDef[] = [
     {
@@ -83,12 +84,6 @@ export function ApplicationsConcern({
 
   const [searchValue, setSearchValue] = useState<string>("");
   const debouncedSearchValue = useDebounce(searchValue, 400);
-
-  const [searchFilters, setSearchFilters] = useState<{
-    status: ApplicationStatus;
-  }>({
-    status: initialSearchFiltersStatus,
-  });
 
   const { pagination, setPagination } = usePagination(10, 1);
 
@@ -172,12 +167,12 @@ export function ApplicationsConcern({
           />
           <ApplicationStatusFilters
             selectedApplicationStatus={searchFilters.status}
-            setSelectedApplicationStatus={(status) =>
-              setSearchFilters({
-                ...searchFilters,
-                status,
-              })
-            }
+            setSelectedApplicationStatus={(status) => {
+              const searchFiltersInitialStatusQueryParamKey = "status";
+              router.push(
+                `/applications?${searchFiltersInitialStatusQueryParamKey}=${status}`
+              );
+            }}
           />
         </Box>
       </Grid>
