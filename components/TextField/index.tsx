@@ -15,6 +15,7 @@ export interface TextFieldProps {
   validate: (value: any, options: { label: string }) => string[];
   readOnly?: boolean;
   id: string;
+  placeholder?: string;
 }
 export function TextField({
   label = "",
@@ -22,6 +23,7 @@ export function TextField({
   value = "",
   readOnly = false,
   id = "",
+  placeholder = "",
   handleInput = (value: string) => {
     console.log(value);
   },
@@ -45,6 +47,7 @@ export function TextField({
         value={value}
         helperText={errors?.length ? errors.join(", ") : ""}
         inputProps={{ readOnly }}
+        placeholder={placeholder}
       />
       {helpertext ? <FormHelperText>Required</FormHelperText> : false}
     </FormControl>

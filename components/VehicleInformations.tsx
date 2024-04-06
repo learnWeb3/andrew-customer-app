@@ -8,7 +8,8 @@ import {
 import { FileType } from "../lib/file-type.enum";
 import { ObjectStorageFileField } from "./ObjectStorageFileField";
 import { useEffect, useState } from "react";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
+import { useVINDecoder } from "../hooks/useVINDecoder";
 
 export interface VehicleInformationsProps {
   label?: string;
@@ -89,6 +90,19 @@ export function VehicleInformations({
       });
   }, [errors]);
 
+  const decodedVIN = useVINDecoder(vehicle.vin || "");
+
+  useEffect(() => {
+    if (decodedVIN?.ErrorCode === "0") {
+      setVehicle({
+        ...vehicle,
+        brand: decodedVIN.Make,
+        model: decodedVIN.Model,
+        originalInServiceDate: new Date(+decodedVIN.ModelYear, 0).toISOString(),
+      });
+    }
+  }, [decodedVIN]);
+
   return (
     <Grid container item xs={12} spacing={4} mb={2} alignItems="flex-start">
       {label ? (
@@ -97,11 +111,14 @@ export function VehicleInformations({
             {label}
           </Typography>
         </Grid>
-      ) : false}
+      ) : (
+        false
+      )}
       <Grid container item xs={12} lg={6} spacing={4} alignItems="flex-start">
         <Grid item xs={12}>
           <TextField
             label="VIN"
+            placeholder="WA1A4AFY2J2008189"
             validate={validateRequired}
             value={vehicle?.vin}
             handleInput={(value) => {

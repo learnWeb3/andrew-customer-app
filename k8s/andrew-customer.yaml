@@ -39,7 +39,7 @@ spec:
     spec:
       containers:
         - name: andrew-customer
-          image: antoineleguillou/andrew-customer:14-03-2024.2
+          image: antoineleguillou/andrew-customer:21-03-2024.3
           imagePullPolicy: IfNotPresent
           resources:
             limits:
