@@ -77,7 +77,7 @@ export function ContractConcern({ id }: ContractConcernProps) {
         lg={12}
         sx={{ display: "flex", alignItems: "center", gap: 4 }}
       >
-        <Typography variant="h4" component="h2">
+        <Typography variant="h6" component="h2">
           {contract?.ref}
         </Typography>
 

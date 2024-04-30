@@ -9,6 +9,7 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import { Logo } from "../../icons/Logo";
 import { MenuItemIcon } from "./MenuItemIcon";
+import { useRouter } from "next/router";
 
 export interface MenuNavigationProps {
   width?: string | number;
@@ -19,6 +20,7 @@ export default function MenuNavigation({
   width = "25%",
   onMenuItemClick = () => {},
 }: MenuNavigationProps) {
+  const router = useRouter();
   return (
     <Paper
       sx={{
@@ -32,7 +34,7 @@ export default function MenuNavigation({
       }}
     >
       <MenuList>
-        <MenuItem>
+        <MenuItem onClick={() => router.push("/")}>
           <ListItemIcon>
             <Logo height="2.5rem" />
           </ListItemIcon>

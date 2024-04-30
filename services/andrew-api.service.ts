@@ -379,6 +379,28 @@ export async function findContractDevices(id: string, accessToken: string) {
     .then((response) => response.data);
 }
 
+export function listVehicles(
+  accessToken: string,
+  pagination: { start: number; limit: number } = { start: 0, limit: 10 },
+) {
+  const endpoint = `/vehicle`;
+  const queryParams = new URLSearchParams({
+    start: pagination.start.toString(),
+    limit: pagination.limit.toString(),
+  });
+  const queryString = queryParams.toString();
+  const headers = {
+    ...getAuthorizationHeaders(accessToken),
+  };
+
+  return andrewApi
+    .get(endpoint + "?" + queryString, {
+      headers,
+    })
+    .then((response) => response.data);
+}
+
+
 export async function generateUploadPresignedURL(
   accessToken: string,
   data: {

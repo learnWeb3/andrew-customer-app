@@ -14,7 +14,7 @@ export function SearchBar({
   return (
     <Grid
       container
-      spacing={4}
+      spacing={0}
       justifyContent="flex-start"
       alignItems="flex-start"
     >
@@ -26,7 +26,6 @@ export function SearchBar({
             variant="outlined"
             onInput={(event: any) => setValue(event.target.value)}
           />
-          <FormHelperText>Required</FormHelperText>
         </FormControl>
       </Grid>
     </Grid>

@@ -56,7 +56,7 @@ export function DeviceConcern({ id = null }: DeviceConcernProps) {
         lg={9}
         sx={{ display: "flex", alignItems: "center", gap: 4 }}
       >
-        <Typography variant="h4" component="h2">
+        <Typography variant="h6" component="h2">
           {device?.serialNumber}
         </Typography>
 

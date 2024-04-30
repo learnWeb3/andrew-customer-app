@@ -18,11 +18,15 @@ import { DeviceStatusFilters } from "./DeviceStatusFilters";
 import { useRouter } from "next/router";
 
 export interface DevicesConcernProps {
-  initialSearchFiltersStatus?: DeviceStatus;
+  searchFilters: {
+    status: DeviceStatus;
+  };
+  setSearchFilters: (searchFilters: { status: DeviceStatus }) => void;
 }
 
 export function DevicesConcern({
-  initialSearchFiltersStatus = DeviceStatus.PAIRED,
+  searchFilters = { status: DeviceStatus.PAIRED },
+  setSearchFilters = (newFilters) => {},
 }: DevicesConcernProps) {
   const columns: GridColDef[] = [
     {
@@ -54,14 +58,7 @@ export function DevicesConcern({
   ];
 
   const router = useRouter();
-
   const { toggled, open, close } = useToggledState(false);
-
-  const [searchFilters, setSearchFilters] = useState<{
-    status: DeviceStatus;
-  }>({
-    status: initialSearchFiltersStatus,
-  });
 
   const { accessToken } = useOidcAccessToken();
 
@@ -129,9 +126,9 @@ export function DevicesConcern({
     }
   }, [accessToken, pagination, debouncedSearchValue, searchFilters]);
   return (
-    <Grid container spacing={4}>
+    <Grid container spacing={2}>
       <Grid item xs={6}>
-        <Typography variant="h4" component="h2" gutterBottom>
+        <Typography variant="h6" component="h2" gutterBottom>
           Devices
         </Typography>
       </Grid>
@@ -142,14 +139,16 @@ export function DevicesConcern({
           value={searchValue}
           setValue={setSearchValue}
         />
+      </Grid>
+      <Grid item xs={12}>
         <DeviceStatusFilters
           selectedDeviceStatus={searchFilters.status}
-          setSelectedDeviceStatus={(status) =>
-            setSearchFilters({
-              ...searchFilters,
-              status,
-            })
-          }
+          setSelectedDeviceStatus={(status) => {
+            const searchFiltersInitialStatusQueryParamKey = "status";
+            router.push(
+              `/devices?${searchFiltersInitialStatusQueryParamKey}=${status}`
+            );
+          }}
         />
       </Grid>
       <Grid item xs={12}>

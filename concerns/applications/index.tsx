@@ -80,7 +80,7 @@ export function ApplicationsConcern({
   const [
     pendingSubscriptionApplicationsCount,
     setPedingSubscriptionApplicationsCount,
-  ] = useState<number>(0);
+  ] = useState<number | null>(null);
 
   const [searchValue, setSearchValue] = useState<string>("");
   const debouncedSearchValue = useDebounce(searchValue, 400);
@@ -127,13 +127,14 @@ export function ApplicationsConcern({
   }, [accessToken, searchFilters.status, pagination, debouncedSearchValue]);
 
   return (
-    <Grid container spacing={4} alignItems="flex-start">
+    <Grid container spacing={2} alignItems="flex-start">
       <Grid item xs={6}>
-        <Typography variant="h4" component="h2" gutterBottom>
+        <Typography variant="h6" component="h2" gutterBottom>
           Applications
         </Typography>
       </Grid>
-      {pendingSubscriptionApplicationsCount <= 5 ? (
+      {pendingSubscriptionApplicationsCount &&
+      pendingSubscriptionApplicationsCount <= 5 ? (
         <Grid
           item
           xs={6}
