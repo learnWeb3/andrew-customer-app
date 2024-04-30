@@ -13,25 +13,32 @@ export function AlertStatus({ status }: AlertStatusProps) {
         <Alert icon={<CheckCircleOutline fontSize="inherit" />} severity="info">
           Your Insurance Contract is currently active.
         </Alert>
-      ) : false}
+      ) : (
+        false
+      )}
       {status === ContractStatus.CANCELED ? (
         <Alert icon={<CheckCircleOutline fontSize="inherit" />} severity="info">
-          Our teams are reviewing your application, it can takes up to 2-5
-          business days.
+             It seems that your Insurance Contract has been canceled.
         </Alert>
-      ) : false}
+      ) : (
+        false
+      )}
       {status === ContractStatus.INACTIVE ? (
         <Alert icon={<CheckCircleOutline fontSize="inherit" />} severity="info">
-          It seems that your Insurance Contract has been canceled.
+          It seems that your Insurance Contract has not yet been activated.
         </Alert>
-      ) : false}
+      ) : (
+        false
+      )}
 
       {status === ContractStatus.PAYMENT_PENDING ? (
         <Alert icon={<CheckCircleOutline fontSize="inherit" />} severity="info">
           Our teams are currently awaiting payment for the contract. Please
           proceed to checkout using the payment URL provided. Thank you.
         </Alert>
-      ) : false}
+      ) : (
+        false
+      )}
 
       {status === ContractStatus.PAYMENT_RENEWAL_ERROR ? (
         <Alert icon={<CheckCircleOutline fontSize="inherit" />} severity="info">
@@ -40,7 +47,9 @@ export function AlertStatus({ status }: AlertStatusProps) {
           persists, feel free to contact our support team for further
           assistance. Thank you.
         </Alert>
-      ) : false}
+      ) : (
+        false
+      )}
     </>
   );
 }

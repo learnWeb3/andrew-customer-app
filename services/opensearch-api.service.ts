@@ -266,6 +266,100 @@ export async function getVehiclesAverageBehaviourClassIntHistogram(
     .then((response) => response.data.aggregations.nested_reports.time_periods);
 }
 
+export async function getVehiclesMetricsReports(
+  accessToken: string,
+  vehcilesVIN: string[] = [],
+  start = 0,
+  limit = 10
+) {
+  const endpoint = `/acl_report/_search`;
+  const headers = {
+    ...getAuthorizationHeaders(accessToken),
+  };
+
+  const query = {
+    from: start,
+    size: limit,
+    query: {
+      bool: {
+        must: [
+          {
+            has_parent: {
+              parent_type: "vehicle",
+              query: {
+                bool: {
+                  should: vehcilesVIN.map((vin) => ({
+                    match: { vehicle: vin },
+                  })),
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  };
+
+  return opensearchApi
+    .post<
+      any,
+      AxiosResponse<{
+        took: number;
+        timed_out: boolean;
+        _shards: {
+          total: number;
+          successful: number;
+          skipped: number;
+          failed: number;
+        };
+        hits: {
+          total: {
+            value: number;
+            relation: string;
+          };
+          max_score: null;
+          hits: {
+            _index: string;
+            _id: string;
+            _score: number;
+            _routing: string;
+            _source: {
+              vehicle: string;
+              device: string;
+              report: {
+                driving_session: {
+                  start: number;
+                  end: number;
+                  driver_behaviour_class: string;
+                  driver_behaviour_class_int: number;
+                };
+              };
+              report_to_vehicle: {
+                name: string;
+                parent: string;
+              };
+            };
+          }[];
+        };
+      }>
+    >(endpoint, query, {
+      headers,
+    })
+    .then((response) => {
+      const count = response.data.hits.total.value;
+      const results = response.data.hits.hits.map(({ _id, _source }) => ({
+        _id,
+        ..._source,
+      }));
+      return {
+        start,
+        limit,
+        count,
+        results,
+      };
+    });
+}
+
 export async function getVehiclesAverageBehaviourClassInt(
   accessToken: string,
   vehcilesVIN: string[] = [],

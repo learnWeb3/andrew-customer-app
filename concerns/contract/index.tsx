@@ -17,6 +17,7 @@ import { ProceedToCheckout } from "./ProceedToCheckout";
 import { ContractStatistics } from "./ContractStatistics";
 import { PaginatedResults } from "../../lib/paginated-results.interface";
 import { Vehicle } from "../../lib/vehicle.interface";
+import { MetricsReportsDetail } from "./MetricsReportsDetail";
 
 export interface ContractConcernProps {
   id: string | null;
@@ -88,7 +89,7 @@ export function ContractConcern({ id }: ContractConcernProps) {
       </Grid>
 
       <Grid item xs={12}>
-        {vehicles ? (
+        {vehicles?.results ? (
           <ContractStatistics
             vehiclesVIN={vehicles.results.map((vehicle) => vehicle.vin)}
             from={Date.now() - 365 * 2 * 24 * 60 * 60 * 1000}
@@ -126,6 +127,17 @@ export function ContractConcern({ id }: ContractConcernProps) {
       ) : (
         false
       )}
+
+      {vehicles?.results ? (
+        <Grid item xs={12}>
+          <MetricsReportsDetail
+            vehiclesVIN={vehicles.results.map((vehicle) => vehicle.vin)}
+          />
+        </Grid>
+      ) : (
+        false
+      )}
+
       {contract && contract.status === ContractStatus.PAYMENT_PENDING ? (
         <Grid item xs={12}>
           <ProceedToCheckout

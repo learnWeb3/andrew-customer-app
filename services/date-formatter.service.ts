@@ -6,7 +6,6 @@ dayjs.extend(duration);
 export function parseDateString(value: string): string {
   return dayjs(value).format("DD MMM YYYY HH:mm");
 }
-
 export function getDuration(value: number, unit: DurationUnitType): string {
   return dayjs.duration(value, unit).format("D[d] H[h] m[m]");
 }

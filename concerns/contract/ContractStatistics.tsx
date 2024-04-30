@@ -85,7 +85,12 @@ export function ContractStatistics({
   const [gaugeData, setGaugeData] = useState<number | null>(null);
 
   useEffect(() => {
-    if (accessToken && vehiclesVIN && from && periodicitySelectionLine) {
+    if (
+      accessToken &&
+      vehiclesVIN?.length &&
+      from &&
+      periodicitySelectionLine
+    ) {
       getVehiclesAverageBehaviourClassIntHistogram(accessToken, vehiclesVIN, {
         from,
         interval: periodicitySelectionLine as any,
@@ -96,7 +101,7 @@ export function ContractStatistics({
   }, [periodicitySelectionLine, accessToken, vehiclesVIN, from]);
 
   useEffect(() => {
-    if (accessToken && vehiclesVIN && periodicitySelectionGauge) {
+    if (accessToken && vehiclesVIN?.length && periodicitySelectionGauge) {
       getVehiclesAverageBehaviourClassInt(accessToken, vehiclesVIN, {
         periodicity: periodicitySelectionGauge as any,
       }).then((value) => {
@@ -105,9 +110,6 @@ export function ContractStatistics({
     }
   }, [periodicitySelectionGauge, accessToken, vehiclesVIN]);
 
-  useEffect(() => {
-    console.log(gaugeData);
-  }, [gaugeData]);
   return (
     <Grid container item xs={12} spacing={4}>
       <Grid item xs={12}>

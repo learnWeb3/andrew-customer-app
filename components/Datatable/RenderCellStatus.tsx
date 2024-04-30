@@ -80,3 +80,28 @@ export function RenderCellDeviceSatus({
     false
   );
 }
+
+export function RenderCellBehaviourClassSatus({
+  hasFocus,
+  value,
+}: GridRenderCellParams<any, "A" | "B" | "C" | "D" | "E" | "F">) {
+  return (
+    <Box>
+      {value === "A" ? (
+        <Badge badgeContent={"A"} color="success" />
+      ) : value === "B" ? (
+        <Badge badgeContent={"B"} color="success" />
+      ) : value === "C" ? (
+        <Badge badgeContent={"C"} color="warning" />
+      ) : value === "D" ? (
+        <Badge badgeContent={"D"} color="warning" />
+      ) : value === "E" ? (
+        <Badge badgeContent={"E"} color="error" />
+      ) : value === "F" ? (
+        <Badge badgeContent={"F"} color="error" />
+      ) : (
+        <Badge badgeContent={"N/A"} color="secondary" />
+      )}
+    </Box>
+  );
+}
