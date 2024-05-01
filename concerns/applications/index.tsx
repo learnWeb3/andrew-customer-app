@@ -5,13 +5,13 @@ import {
   Hidden,
   Pagination,
   Stack,
-  TablePagination,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../components/Datatable";
 import ArrowRightAltOutlinedIcon from "@mui/icons-material/ArrowRightAltOutlined";
+import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import { SearchBar } from "../../components/SearchBar";
 import { RenderCellLink } from "../../components/Datatable/RenderCellLink";
 import { RenderCellApplicationSatus } from "../../components/Datatable/RenderCellStatus";
@@ -153,8 +153,9 @@ export function ApplicationsConcern({
 
   return (
     <Grid container spacing={2} alignItems="flex-start">
-      <Grid item xs={6}>
-        <Typography variant="h6" component="h2" gutterBottom>
+       <Grid item xs={12} display={"flex"} alignItems={"center"} gap={1}>
+        <FolderOutlinedIcon color="inherit" />
+        <Typography variant="h6" component="h2">
           Applications
         </Typography>
       </Grid>

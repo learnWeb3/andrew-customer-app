@@ -3,10 +3,8 @@ import Paper from "@mui/material/Paper";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import DevicesOutlinedIcon from "@mui/icons-material/DevicesOutlined";
-import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
+import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import { Logo } from "../../icons/Logo";
 import { MenuItemIcon } from "./MenuItemIcon";
 import { useRouter } from "next/router";
@@ -31,7 +29,7 @@ export default function MenuNavigation({
         fill: "secondary.main",
         position: "fixed",
         padding: "1rem",
-        borderRadius: 0
+        borderRadius: 0,
       }}
     >
       <MenuList>
@@ -51,7 +49,7 @@ export default function MenuNavigation({
 
         <MenuItemIcon
           label="Applications"
-          icon={<PeopleOutlineOutlinedIcon color="inherit" />}
+          icon={<FolderOutlinedIcon color="inherit" />}
           path="/applications"
           onMenuItemClick={onMenuItemClick}
         />

@@ -9,6 +9,7 @@ import { parseDateString } from "../../services/date-formatter.service";
 import { ContractStatus } from "../../lib/contract-status.enum";
 import { RenderCellContractSatus } from "../../components/Datatable/RenderCellStatus";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
+import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 
 export interface ContractCardProps {
   id: string;
@@ -34,8 +35,9 @@ export function ContractCard({
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardHeader
+        avatar={<DescriptionOutlinedIcon color="inherit" />}
         title={
-          <Typography variant="subtitle2" gutterBottom>
+          <Typography variant="subtitle2">
             {parseDateString(createdAt)}
           </Typography>
         }

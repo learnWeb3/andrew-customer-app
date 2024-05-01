@@ -23,6 +23,7 @@ import { usePagination } from "../../hooks/usePagination";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useRouter } from "next/router";
 import { ContractsCardsList } from "./ContractsCardsList";
+import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 
 export interface ContractsConcernProps {
   searchFilters: {
@@ -135,8 +136,9 @@ export function ContractsConcern({
 
   return (
     <Grid container spacing={2} alignItems="flex-start">
-      <Grid item xs={6}>
-        <Typography variant="h6" component="h2" gutterBottom>
+      <Grid item xs={12} display={"flex"} alignItems={"center"} gap={1}>
+        <DescriptionOutlinedIcon color="inherit" />
+        <Typography variant="h6" component="h2">
           Contracts
         </Typography>
       </Grid>

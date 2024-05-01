@@ -10,6 +10,7 @@ import { RenderCellApplicationSatus } from "../../components/Datatable/RenderCel
 import { parseDateString } from "../../services/date-formatter.service";
 import { UserAvatar } from "../../components/UserAvatar";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
+import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 
 export interface ApplicationCardProps {
   id: string;
@@ -35,9 +36,9 @@ export function ApplicationCard({
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardHeader
-        avatar={<UserAvatar fullName={user.label} />}
+        avatar={<FolderOutlinedIcon color="inherit" />}
         title={
-          <Typography variant="subtitle2" gutterBottom>
+          <Typography variant="subtitle2">
             {parseDateString(createdAt)}
           </Typography>
         }
