@@ -323,8 +323,8 @@ export function ContractStatistics({
                       title: {
                         text: "Behaviour score",
                       },
-                      min: 5,
-                      max: 40,
+                      min: 0,
+                      max: 100,
                     },
                     legend: {
                       position: "top",

@@ -131,8 +131,21 @@ export function DeviceStatistics({ vehiclesVIN, from }: DeviceStatisticsProps) {
                       title: {
                         text: "Behaviour score",
                       },
-                      min: 5,
-                      max: 40,
+                      min:
+                        lineData.reduce((min, { count: { value } }) => {
+                          if (value && value < min) {
+                            return value;
+                          } else {
+                            return min;
+                          }
+                        }, 0) || 0,
+                      max: lineData.reduce((max, { count: { value } }) => {
+                        if (value && value > max) {
+                          return value;
+                        } else {
+                          return max;
+                        }
+                      }, 0),
                     },
                     legend: {
                       position: "top",
