@@ -17,6 +17,7 @@ import { store } from "../store/store";
 import { ComponentType, ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
 import { ToastContainer } from "react-toastify";
+import "../styles/main.css";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -40,7 +41,10 @@ export default function MyApp(props: MyAppProps) {
     <CacheProvider value={emotionCache}>
       <Provider store={store}>
         <Head>
-          <meta name="viewport" content="initial-scale=1, width=device-width" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
         </Head>
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}

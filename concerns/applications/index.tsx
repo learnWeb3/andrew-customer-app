@@ -1,4 +1,14 @@
-import { Box, Button, Grid, Hidden, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  Hidden,
+  Pagination,
+  Stack,
+  TablePagination,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../components/Datatable";
 import ArrowRightAltOutlinedIcon from "@mui/icons-material/ArrowRightAltOutlined";
@@ -20,6 +30,7 @@ import { Application } from "../../lib/subscription-application.interface";
 import { ApplicationStatusFilters } from "./ApplicationStatusFilters";
 import { usePagination } from "../../hooks/usePagination";
 import { useDebounce } from "../../hooks/useDebounce";
+import { ApplicationsCardsList } from "./ApplicationsCardsList";
 
 export interface ApplicationsConcernProps {
   searchFilters: {
@@ -34,7 +45,7 @@ export function ApplicationsConcern({
 }: ApplicationsConcernProps) {
   const columns: GridColDef[] = [
     {
-      field: "ref",
+      field: "reference",
       headerName: "Ref",
       flex: 2,
       renderCell: RenderCellLink,
@@ -69,7 +80,19 @@ export function ApplicationsConcern({
 
   const { accessToken } = useOidcAccessToken();
   const [subscriptionApplications, setSubscriptionApplications] = useState<
-    PaginatedResults<Application>
+    PaginatedResults<{
+      id: string;
+      reference: {
+        label: string;
+        href: string;
+      };
+      user: {
+        label: string;
+        href: string;
+      };
+      status: ApplicationStatus;
+      createdAt: string;
+    }>
   >({
     count: 0,
     results: [],
@@ -110,7 +133,7 @@ export function ApplicationsConcern({
           ...data,
           results: data.results.map((subscriptionApplication: Application) => ({
             id: subscriptionApplication._id,
-            ref: {
+            reference: {
               label: subscriptionApplication.ref,
               href: `/applications/${subscriptionApplication._id}`,
             },
@@ -125,6 +148,8 @@ export function ApplicationsConcern({
       });
     }
   }, [accessToken, searchFilters.status, pagination, debouncedSearchValue]);
+
+  const matches = useMediaQuery("(min-width:600px)");
 
   return (
     <Grid container spacing={2} alignItems="flex-start">
@@ -178,17 +203,43 @@ export function ApplicationsConcern({
         </Box>
       </Grid>
       <Grid item xs={12}>
-        <DataTable
-          count={subscriptionApplications.count}
-          start={subscriptionApplications.start}
-          limit={subscriptionApplications.limit}
-          rows={subscriptionApplications.results}
-          columns={columns}
-          onPaginationChange={(newPagination) => {
-            setPagination(newPagination);
-          }}
-          pageSizeOptions={[5, 10, 25, 50, 100]}
-        />
+        {matches ? (
+          <DataTable
+            count={subscriptionApplications.count}
+            start={subscriptionApplications.start}
+            limit={subscriptionApplications.limit}
+            rows={subscriptionApplications.results}
+            columns={columns}
+            onPaginationChange={(newPagination) => {
+              setPagination(newPagination);
+            }}
+            pageSizeOptions={[5, 10, 25, 50, 100]}
+          />
+        ) : (
+          <Stack gap={4}>
+            <ApplicationsCardsList
+              rows={subscriptionApplications?.results || []}
+            />
+            {subscriptionApplications?.count ? (
+              <Pagination
+                size="large"
+                sx={{ mb: 4 }}
+                count={Math.ceil(
+                  subscriptionApplications.count / pagination.pageSize
+                )}
+                page={pagination.page}
+                onChange={(
+                  event: React.ChangeEvent<unknown>,
+                  value: number
+                ) => {
+                  setPagination({ ...pagination, page: value });
+                }}
+              />
+            ) : (
+              false
+            )}
+          </Stack>
+        )}
       </Grid>
     </Grid>
   );

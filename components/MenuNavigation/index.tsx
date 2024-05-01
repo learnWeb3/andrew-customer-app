@@ -31,6 +31,7 @@ export default function MenuNavigation({
         fill: "secondary.main",
         position: "fixed",
         padding: "1rem",
+        borderRadius: 0
       }}
     >
       <MenuList>

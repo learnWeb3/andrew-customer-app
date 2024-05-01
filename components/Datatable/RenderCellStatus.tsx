@@ -3,20 +3,22 @@ import { UserStatus } from "../../lib/user-status.enum";
 import { ContractStatus } from "../../lib/contract-status.enum";
 import { DeviceStatus } from "../../lib/device-status.enum";
 import { ApplicationStatus } from "../../lib/application-status.enum";
-import { Badge, Box } from "@mui/material";
+import { Chip, Box } from "@mui/material";
 
 export function RenderCellUserSatus({
   hasFocus,
   value,
-}: GridRenderCellParams<any, UserStatus>) {
+}:
+  | GridRenderCellParams<any, UserStatus>
+  | { value: UserStatus; hasFocus?: boolean }) {
   return (
     <Box>
       {value === UserStatus.ACTIVE ? (
-        <Badge badgeContent={"Active"} color="success" />
+        <Chip label={"Active"} color="success" />
       ) : value === UserStatus.INACTIVE ? (
-        <Badge badgeContent={"Inactive"} color="info" />
+        <Chip label={"Inactive"} color="info" />
       ) : value === UserStatus.DISABLED ? (
-        <Badge badgeContent={"Disabled"} color="error" />
+        <Chip label={"Disabled"} color="error" />
       ) : (
         false
       )}
@@ -27,17 +29,19 @@ export function RenderCellUserSatus({
 export function RenderCellContractSatus({
   hasFocus,
   value,
-}: GridRenderCellParams<any, ContractStatus>) {
+}:
+  | GridRenderCellParams<any, ContractStatus>
+  | { value: ContractStatus; hasFocus?: boolean }) {
   return value === ContractStatus.ACTIVE ? (
-    <Badge badgeContent={"Active"} color="success" />
+    <Chip label={"Active"} color="success" />
   ) : value === ContractStatus.INACTIVE ? (
-    <Badge badgeContent={"Inactive"} color="info" />
+    <Chip label={"Inactive"} color="info" />
   ) : value === ContractStatus.PAYMENT_PENDING ? (
-    <Badge badgeContent={"Payment pending"} color="warning" />
+    <Chip label={"Payment pending"} color="warning" />
   ) : value === ContractStatus.PAYMENT_RENEWAL_ERROR ? (
-    <Badge badgeContent={"Payment renewal error"} color="error" />
+    <Chip label={"Payment renewal error"} color="error" />
   ) : value === ContractStatus.CANCELED ? (
-    <Badge badgeContent={"Canceled"} color="error" />
+    <Chip label={"Canceled"} color="error" />
   ) : (
     false
   );
@@ -46,21 +50,23 @@ export function RenderCellContractSatus({
 export function RenderCellApplicationSatus({
   hasFocus,
   value,
-}: GridRenderCellParams<any, ApplicationStatus>) {
+}:
+  | GridRenderCellParams<any, ApplicationStatus>
+  | { value: ApplicationStatus; hasFocus?: boolean }) {
   return value === ApplicationStatus.PENDING ? (
-    <Badge badgeContent={"Pending"} color="info" />
+    <Chip label={"Pending"} color="info" />
   ) : value === ApplicationStatus.REVIEWING ? (
-    <Badge badgeContent={"Reviewing"} color={"info"} />
+    <Chip label={"Reviewing"} color={"info"} />
   ) : value === ApplicationStatus.PAYMENT_PENDING ? (
-    <Badge badgeContent={"Payment pending"} color="info" />
+    <Chip label={"Payment pending"} color="info" />
   ) : value === ApplicationStatus.PAYMENT_CONFIRMED ? (
-    <Badge badgeContent={"Payment confirmed"} color="success" />
+    <Chip label={"Payment confirmed"} color="success" />
   ) : value === ApplicationStatus.PAYMENT_CANCELED ? (
-    <Badge badgeContent={"Payment canceled"} color="error" />
+    <Chip label={"Payment canceled"} color="error" />
   ) : value === ApplicationStatus.TO_AMMEND ? (
-    <Badge badgeContent={"To ammend"} color="warning" />
+    <Chip label={"To ammend"} color="warning" />
   ) : value === ApplicationStatus.REJECTED ? (
-    <Badge badgeContent={"Rejected"} color="error" />
+    <Chip label={"Rejected"} color="error" />
   ) : (
     false
   );
@@ -69,13 +75,15 @@ export function RenderCellApplicationSatus({
 export function RenderCellDeviceSatus({
   hasFocus,
   value,
-}: GridRenderCellParams<any, DeviceStatus>) {
+}:
+  | GridRenderCellParams<any, DeviceStatus>
+  | { value: DeviceStatus; hasFocus?: boolean }) {
   return value === DeviceStatus.DISABLED ? (
-    <Badge badgeContent={"Disabled"} color="error" />
+    <Chip label={"Disabled"} color="error" />
   ) : value === DeviceStatus.PAIRED ? (
-    <Badge badgeContent={"Paired"} color="success" />
+    <Chip label={"Paired"} color="success" />
   ) : value === DeviceStatus.INACTIVE ? (
-    <Badge badgeContent={"Inactive"} color="info" />
+    <Chip label={"Inactive"} color="info" />
   ) : (
     false
   );
@@ -84,23 +92,25 @@ export function RenderCellDeviceSatus({
 export function RenderCellBehaviourClassSatus({
   hasFocus,
   value,
-}: GridRenderCellParams<any, "A" | "B" | "C" | "D" | "E" | "F">) {
+}:
+  | GridRenderCellParams<any, "A" | "B" | "C" | "D" | "E" | "F">
+  | { value: "A" | "B" | "C" | "D" | "E" | "F"; hasFocus?: boolean }) {
   return (
     <Box>
       {value === "A" ? (
-        <Badge badgeContent={"A"} color="success" />
+        <Chip label={"A"} color="success" />
       ) : value === "B" ? (
-        <Badge badgeContent={"B"} color="success" />
+        <Chip label={"B"} color="success" />
       ) : value === "C" ? (
-        <Badge badgeContent={"C"} color="warning" />
+        <Chip label={"C"} color="warning" />
       ) : value === "D" ? (
-        <Badge badgeContent={"D"} color="warning" />
+        <Chip label={"D"} color="warning" />
       ) : value === "E" ? (
-        <Badge badgeContent={"E"} color="error" />
+        <Chip label={"E"} color="error" />
       ) : value === "F" ? (
-        <Badge badgeContent={"F"} color="error" />
+        <Chip label={"F"} color="error" />
       ) : (
-        <Badge badgeContent={"N/A"} color="secondary" />
+        <Chip label={"N/A"} color="secondary" />
       )}
     </Box>
   );
