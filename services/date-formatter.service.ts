@@ -2,12 +2,21 @@ import dayjs from "dayjs";
 import duration, { DurationUnitType } from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
 export function parseDateString(value: string): string {
   return dayjs(value).format("DD MMM YYYY HH:mm");
 }
-export function getDuration(value: number, unit: DurationUnitType): string {
-  return dayjs.duration(value, unit).format("D[d] H[h] m[m]");
+export function getDuration(
+  value: number,
+  unit: DurationUnitType,
+  type: "format" | "humanize" = "format"
+): string {
+  const _duration = dayjs.duration(value, unit);
+
+  return type === "format"
+    ? _duration.format("D[d] H[h] m[m]")
+    : _duration.humanize();
 }
 
 export function timeElapsedSince(value: string): string {

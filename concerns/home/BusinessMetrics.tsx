@@ -1,7 +1,8 @@
-import { Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import { MetricPanel } from "../../components/MetricPanel";
 import DevicesOutlinedIcon from "@mui/icons-material/DevicesOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import { useOidcAccessToken } from "@axa-fr/react-oidc";
 import { useEffect, useState } from "react";
 import {
@@ -12,10 +13,16 @@ import {
 } from "../../services/andrew-api.service";
 import { DeviceStatus } from "../../lib/device-status.enum";
 import { ContractStatus } from "../../lib/contract-status.enum";
-import { getVehiclesAverageBehaviourClassInt } from "../../services/opensearch-api.service";
+import {
+  getVehiclesAverageBehaviourClassInt,
+  getVehiclesAverageDrivingTime,
+} from "../../services/opensearch-api.service";
 import SpeedOutlinedIcon from "@mui/icons-material/SpeedOutlined";
 import dynamic from "next/dynamic";
 import { Vehicle } from "../../lib/vehicle.interface";
+import { getDuration } from "../../services/date-formatter.service";
+import DriveEtaOutlinedIcon from "@mui/icons-material/DriveEtaOutlined";
+import WatchLaterOutlinedIcon from "@mui/icons-material/WatchLaterOutlined";
 
 export const GaugeChart = dynamic(
   () =>
@@ -59,19 +66,69 @@ export function BusinessMetrics() {
     }
   }, [accessToken]);
 
-  const [periodicitySelectionGauge, setPeriodicitySelectionGauge] =
-    useState<string>("year");
-  const [gaugeData, setGaugeData] = useState<number | null>(null);
+  const yearPeriodicitySelectionGauge = "year";
+  const weekPeriodicitySelectionGauge = "week";
+  const dayPeriodicitySelectionGauge = "day";
+
+  const [yearVehiclesDrivingSum, setYearVehiclesDrivingSum] = useState<
+    number | null
+  >(null);
+  const [weekVehiclesDrivingSum, setWeekVehiclesDrivingSum] = useState<
+    number | null
+  >(null);
+
+  const [dayVehiclesDrivingSum, setDayVehiclesDrivingSum] = useState<
+    number | null
+  >(null);
+
+  const [yearGaugeData, setYearGaugeData] = useState<number | null>(null);
+  const [weekGaugeData, setWeekGaugeData] = useState<number | null>(null);
+  const [dayGaugeData, setDayGaugeData] = useState<number | null>(null);
 
   useEffect(() => {
-    if (accessToken && vehiclesVIN?.length && periodicitySelectionGauge) {
+    if (accessToken && vehiclesVIN?.length && yearPeriodicitySelectionGauge) {
       getVehiclesAverageBehaviourClassInt(accessToken, vehiclesVIN, {
-        periodicity: periodicitySelectionGauge as any,
+        periodicity: yearPeriodicitySelectionGauge as any,
       }).then((value) => {
-        setGaugeData(value);
+        setYearGaugeData(value);
+      });
+      getVehiclesAverageDrivingTime(accessToken, vehiclesVIN, {
+        periodicity: yearPeriodicitySelectionGauge as any,
+      }).then((value) => {
+        setYearVehiclesDrivingSum(value);
       });
     }
-  }, [periodicitySelectionGauge, accessToken, vehiclesVIN]);
+  }, [yearPeriodicitySelectionGauge, accessToken, vehiclesVIN]);
+
+  useEffect(() => {
+    if (accessToken && vehiclesVIN?.length && weekPeriodicitySelectionGauge) {
+      getVehiclesAverageBehaviourClassInt(accessToken, vehiclesVIN, {
+        periodicity: weekPeriodicitySelectionGauge as any,
+      }).then((value) => {
+        setWeekGaugeData(value);
+      });
+      getVehiclesAverageDrivingTime(accessToken, vehiclesVIN, {
+        periodicity: weekPeriodicitySelectionGauge as any,
+      }).then((value) => {
+        setWeekVehiclesDrivingSum(value);
+      });
+    }
+  }, [weekPeriodicitySelectionGauge, accessToken, vehiclesVIN]);
+
+  useEffect(() => {
+    if (accessToken && vehiclesVIN?.length && dayPeriodicitySelectionGauge) {
+      getVehiclesAverageBehaviourClassInt(accessToken, vehiclesVIN, {
+        periodicity: dayPeriodicitySelectionGauge as any,
+      }).then((value) => {
+        setDayGaugeData(value);
+      });
+      getVehiclesAverageDrivingTime(accessToken, vehiclesVIN, {
+        periodicity: dayPeriodicitySelectionGauge as any,
+      }).then((value) => {
+        setDayVehiclesDrivingSum(value);
+      });
+    }
+  }, [dayPeriodicitySelectionGauge, accessToken, vehiclesVIN]);
 
   return (
     <Grid container item xs={12} spacing={4} alignItems="center" mb={4}>
@@ -108,19 +165,19 @@ export function BusinessMetrics() {
               left: "2rem",
             }}
           >
-            Behaviour score gauge (current year)
+            Behaviour score gauge (current day)
           </Typography>
-          {gaugeData ? (
+          {dayGaugeData ? (
             <GaugeChart
-              series={[Math.ceil(gaugeData)]}
+              series={[Math.ceil(dayGaugeData)]}
               width={"100%"}
               options={{
                 labels:
-                  gaugeData > 20 && gaugeData < 40
+                  dayGaugeData > 20 && dayGaugeData < 40
                     ? ["Poor driver"]
-                    : gaugeData >= 40 && gaugeData < 50
+                    : dayGaugeData >= 40 && dayGaugeData < 50
                     ? ["Average driver"]
-                    : gaugeData >= 50
+                    : dayGaugeData >= 50
                     ? ["Good driver"]
                     : ["Dangerous driver"],
                 chart: {
@@ -136,11 +193,11 @@ export function BusinessMetrics() {
                       name: {
                         fontSize: "16px",
                         color:
-                          gaugeData > 20 && gaugeData < 40
+                          dayGaugeData > 20 && dayGaugeData < 40
                             ? "##ff9800"
-                            : gaugeData >= 40 && gaugeData < 50
+                            : dayGaugeData >= 40 && dayGaugeData < 50
                             ? "#085FCE"
-                            : gaugeData >= 50
+                            : dayGaugeData >= 50
                             ? "#085FCE"
                             : "#ef5350",
                         offsetY: 120,
@@ -149,11 +206,11 @@ export function BusinessMetrics() {
                         offsetY: 76,
                         fontSize: "22px",
                         color:
-                          gaugeData > 20 && gaugeData < 40
+                          dayGaugeData > 20 && dayGaugeData < 40
                             ? "##ff9800"
-                            : gaugeData >= 40 && gaugeData < 50
+                            : dayGaugeData >= 40 && dayGaugeData < 50
                             ? "#085FCE"
-                            : gaugeData >= 50
+                            : dayGaugeData >= 50
                             ? "#085FCE"
                             : "#ef5350",
                         formatter: function (val) {
@@ -165,11 +222,11 @@ export function BusinessMetrics() {
                 },
                 fill: {
                   colors:
-                    gaugeData > 20 && gaugeData < 40
+                    dayGaugeData > 20 && dayGaugeData < 40
                       ? ["##ff9800"]
-                      : gaugeData >= 40 && gaugeData < 50
+                      : dayGaugeData >= 40 && dayGaugeData < 50
                       ? ["#085FCE"]
-                      : gaugeData >= 50
+                      : dayGaugeData >= 50
                       ? ["#085FCE"]
                       : ["#ef5350"],
                   type: "gradient",
@@ -197,14 +254,438 @@ export function BusinessMetrics() {
           )}
         </Paper>
       </Grid>
-      <Grid item xs={12} lg={6} container spacing={4} alignItems="flex-start">
+      <Grid
+        item
+        xs={12}
+        lg={6}
+        display={"flex"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        <Paper
+          sx={{
+            p: 4,
+            height: "75vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            width: "100%",
+            gap: 2,
+            position: "relative",
+          }}
+        >
+          <Typography
+            variant="subtitle1"
+            component="p"
+            sx={{
+              color: "orange.main",
+              width: "100%",
+              textAlign: "left",
+              position: "absolute",
+              top: "2rem",
+              left: "2rem",
+            }}
+          >
+            Driving time (current day)
+          </Typography>
+          <Box display={"flex"} flexDirection={"column"} gap={2}>
+            <Box>
+              <DriveEtaOutlinedIcon
+                sx={{ color: "primary.light", fontSize: "4rem" }}
+              />
+              <WatchLaterOutlinedIcon
+                sx={{ color: "primary.light", fontSize: "2rem" }}
+              />
+            </Box>
+            <Typography
+              variant="subtitle1"
+              sx={{ color: "primary.light" }}
+              fontWeight={"bold"}
+            >
+              {dayVehiclesDrivingSum
+                ? getDuration(
+                    dayVehiclesDrivingSum as number,
+                    "millisecond",
+                    "humanize"
+                  )
+                : getDuration(0 as number, "millisecond", "humanize")}
+            </Typography>
+          </Box>
+        </Paper>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        lg={6}
+        display={"flex"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        <Paper
+          sx={{
+            p: 4,
+            height: "75vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            width: "100%",
+            gap: 2,
+            position: "relative",
+          }}
+        >
+          <Typography
+            variant="subtitle1"
+            component="p"
+            sx={{
+              color: "orange.main",
+              width: "100%",
+              textAlign: "left",
+              position: "absolute",
+              top: "2rem",
+              left: "2rem",
+            }}
+          >
+            Behaviour score gauge (current week)
+          </Typography>
+          {weekGaugeData ? (
+            <GaugeChart
+              series={[Math.ceil(weekGaugeData)]}
+              width={"100%"}
+              options={{
+                labels:
+                  weekGaugeData > 20 && weekGaugeData < 40
+                    ? ["Poor driver"]
+                    : weekGaugeData >= 40 && weekGaugeData < 50
+                    ? ["Average driver"]
+                    : weekGaugeData >= 50
+                    ? ["Good driver"]
+                    : ["Dangerous driver"],
+                chart: {
+                  height: 350,
+                  type: "radialBar",
+                  offsetY: -10,
+                },
+                plotOptions: {
+                  radialBar: {
+                    startAngle: -135,
+                    endAngle: 135,
+                    dataLabels: {
+                      name: {
+                        fontSize: "16px",
+                        color:
+                          weekGaugeData > 20 && weekGaugeData < 40
+                            ? "##ff9800"
+                            : weekGaugeData >= 40 && weekGaugeData < 50
+                            ? "#085FCE"
+                            : weekGaugeData >= 50
+                            ? "#085FCE"
+                            : "#ef5350",
+                        offsetY: 120,
+                      },
+                      value: {
+                        offsetY: 76,
+                        fontSize: "22px",
+                        color:
+                          weekGaugeData > 20 && weekGaugeData < 40
+                            ? "##ff9800"
+                            : weekGaugeData >= 40 && weekGaugeData < 50
+                            ? "#085FCE"
+                            : weekGaugeData >= 50
+                            ? "#085FCE"
+                            : "#ef5350",
+                        formatter: function (val) {
+                          return val + "%";
+                        },
+                      },
+                    },
+                  },
+                },
+                fill: {
+                  colors:
+                    weekGaugeData > 20 && weekGaugeData < 40
+                      ? ["##ff9800"]
+                      : weekGaugeData >= 40 && weekGaugeData < 50
+                      ? ["#085FCE"]
+                      : weekGaugeData >= 50
+                      ? ["#085FCE"]
+                      : ["#ef5350"],
+                  type: "gradient",
+                  gradient: {
+                    shade: "dark",
+                    shadeIntensity: 0.15,
+                    inverseColors: false,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                    stops: [0, 50, 65, 91],
+                  },
+                },
+                stroke: {
+                  dashArray: 4,
+                },
+              }}
+            />
+          ) : (
+            <>
+              <SpeedOutlinedIcon sx={{ fontSize: "5rem" }} />
+              <Typography component={"p"} variant="button">
+                Nothing just yet.
+              </Typography>
+            </>
+          )}
+        </Paper>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        lg={6}
+        display={"flex"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        <Paper
+          sx={{
+            p: 4,
+            height: "75vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            width: "100%",
+            gap: 2,
+            position: "relative",
+          }}
+        >
+          <Typography
+            variant="subtitle1"
+            component="p"
+            sx={{
+              color: "orange.main",
+              width: "100%",
+              textAlign: "left",
+              position: "absolute",
+              top: "2rem",
+              left: "2rem",
+            }}
+          >
+            Driving time (current week)
+          </Typography>
+          <Box display={"flex"} flexDirection={"column"} gap={2}>
+            <Box>
+              <DriveEtaOutlinedIcon
+                sx={{ color: "primary.light", fontSize: "4rem" }}
+              />
+              <WatchLaterOutlinedIcon
+                sx={{ color: "primary.light", fontSize: "2rem" }}
+              />
+            </Box>
+            <Typography
+              variant="subtitle1"
+              sx={{ color: "primary.light" }}
+              fontWeight={"bold"}
+            >
+              {weekVehiclesDrivingSum
+                ? getDuration(
+                    weekVehiclesDrivingSum as number,
+                    "millisecond",
+                    "humanize"
+                  )
+                : getDuration(0 as number, "millisecond", "humanize")}
+            </Typography>
+          </Box>
+        </Paper>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        lg={6}
+        display={"flex"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        <Paper
+          sx={{
+            p: 4,
+            height: "75vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            width: "100%",
+            gap: 2,
+            position: "relative",
+          }}
+        >
+          <Typography
+            variant="subtitle1"
+            component="p"
+            sx={{
+              color: "orange.main",
+              width: "100%",
+              textAlign: "left",
+              position: "absolute",
+              top: "2rem",
+              left: "2rem",
+            }}
+          >
+            Behaviour score gauge (current year)
+          </Typography>
+          {yearGaugeData ? (
+            <GaugeChart
+              series={[Math.ceil(yearGaugeData)]}
+              width={"100%"}
+              options={{
+                labels:
+                  yearGaugeData > 20 && yearGaugeData < 40
+                    ? ["Poor driver"]
+                    : yearGaugeData >= 40 && yearGaugeData < 50
+                    ? ["Average driver"]
+                    : yearGaugeData >= 50
+                    ? ["Good driver"]
+                    : ["Dangerous driver"],
+                chart: {
+                  height: 350,
+                  type: "radialBar",
+                  offsetY: -10,
+                },
+                plotOptions: {
+                  radialBar: {
+                    startAngle: -135,
+                    endAngle: 135,
+                    dataLabels: {
+                      name: {
+                        fontSize: "16px",
+                        color:
+                          yearGaugeData > 20 && yearGaugeData < 40
+                            ? "##ff9800"
+                            : yearGaugeData >= 40 && yearGaugeData < 50
+                            ? "#085FCE"
+                            : yearGaugeData >= 50
+                            ? "#085FCE"
+                            : "#ef5350",
+                        offsetY: 120,
+                      },
+                      value: {
+                        offsetY: 76,
+                        fontSize: "22px",
+                        color:
+                          yearGaugeData > 20 && yearGaugeData < 40
+                            ? "##ff9800"
+                            : yearGaugeData >= 40 && yearGaugeData < 50
+                            ? "#085FCE"
+                            : yearGaugeData >= 50
+                            ? "#085FCE"
+                            : "#ef5350",
+                        formatter: function (val) {
+                          return val + "%";
+                        },
+                      },
+                    },
+                  },
+                },
+                fill: {
+                  colors:
+                    yearGaugeData > 20 && yearGaugeData < 40
+                      ? ["##ff9800"]
+                      : yearGaugeData >= 40 && yearGaugeData < 50
+                      ? ["#085FCE"]
+                      : yearGaugeData >= 50
+                      ? ["#085FCE"]
+                      : ["#ef5350"],
+                  type: "gradient",
+                  gradient: {
+                    shade: "dark",
+                    shadeIntensity: 0.15,
+                    inverseColors: false,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                    stops: [0, 50, 65, 91],
+                  },
+                },
+                stroke: {
+                  dashArray: 4,
+                },
+              }}
+            />
+          ) : (
+            <>
+              <SpeedOutlinedIcon sx={{ fontSize: "5rem" }} />
+              <Typography component={"p"} variant="button">
+                Nothing just yet.
+              </Typography>
+            </>
+          )}
+        </Paper>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        lg={6}
+        display={"flex"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        <Paper
+          sx={{
+            p: 4,
+            height: "75vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            width: "100%",
+            gap: 2,
+            position: "relative",
+          }}
+        >
+          <Typography
+            variant="subtitle1"
+            component="p"
+            sx={{
+              color: "orange.main",
+              width: "100%",
+              textAlign: "left",
+              position: "absolute",
+              top: "2rem",
+              left: "2rem",
+            }}
+          >
+            Driving time (current year)
+          </Typography>
+          <Box display={"flex"} flexDirection={"column"} gap={2}>
+            <Box>
+              <DriveEtaOutlinedIcon
+                sx={{ color: "primary.light", fontSize: "4rem" }}
+              />
+              <WatchLaterOutlinedIcon
+                sx={{ color: "primary.light", fontSize: "2rem" }}
+              />
+            </Box>
+            <Typography
+              variant="subtitle1"
+              sx={{ color: "primary.light" }}
+              fontWeight={"bold"}
+            >
+              {yearVehiclesDrivingSum
+                ? getDuration(
+                    yearVehiclesDrivingSum as number,
+                    "millisecond",
+                    "humanize"
+                  )
+                : getDuration(0 as number, "millisecond", "humanize")}
+            </Typography>
+          </Box>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} lg={12} container spacing={4} alignItems="flex-start">
         <Grid item xs={12} lg={12}>
           <MetricPanel
             label="Pending subscriptions"
             value={pendingSubscriptionApplicationsCount.toFixed(1)}
             href="/applications?status=PENDING"
             icon={
-              <DevicesOutlinedIcon
+              <FolderOutlinedIcon
                 color="inherit"
                 sx={{
                   width: "2.5rem",

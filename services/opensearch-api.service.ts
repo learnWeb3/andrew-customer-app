@@ -462,3 +462,110 @@ export async function getVehiclesAverageBehaviourClassInt(
         response.data.aggregations.nested_reports.average_driver_behaviour.value
     );
 }
+
+export async function getVehiclesAverageDrivingTime(
+  accessToken: string,
+  vehcilesVIN: string[] = [],
+  options: { periodicity: "year" | "month" | "week" | "day" }
+) {
+  const periodicityToFromMap = {
+    year: () => Date.now() - 365 * 24 * 60 * 60 * 1000,
+    month: () => Date.now() - 31 * 24 * 60 * 60 * 1000,
+    week: () => Date.now() - 7 * 24 * 60 * 60 * 1000,
+    day: () => Date.now() - 24 * 60 * 60 * 1000,
+  };
+  const endpoint = `/acl_report/_search`;
+  const headers = {
+    ...getAuthorizationHeaders(accessToken),
+  };
+
+  const query = {
+    size: 0,
+    query: {
+      bool: {
+        must: [
+          {
+            has_parent: {
+              parent_type: "vehicle",
+              query: {
+                bool: {
+                  should: vehcilesVIN.map((vin) => ({
+                    match: { vehicle: vin },
+                  })),
+                },
+              },
+            },
+          },
+          {
+            nested: {
+              path: "report.driving_session",
+              query: {
+                range: {
+                  "report.driving_session.start": {
+                    gte: periodicityToFromMap[options.periodicity](),
+                    format: "epoch_millis",
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+    aggs: {
+      nested_reports: {
+        nested: {
+          path: "report.driving_session",
+        },
+        aggs: {
+          driving_time_sum_ms: {
+            sum: {
+              script: {
+                source:
+                  "doc['report.driving_session.end'].value.getMillis() - doc['report.driving_session.start'].value.getMillis()",
+                lang: "painless",
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  return opensearchApi
+    .post<
+      any,
+      AxiosResponse<{
+        took: number;
+        timed_out: boolean;
+        _shards: {
+          total: number;
+          successful: number;
+          skipped: number;
+          failed: number;
+        };
+        hits: {
+          total: {
+            value: number;
+            relation: string;
+          };
+          max_score: null;
+          hits: never[];
+        };
+        aggregations: {
+          nested_reports: {
+            doc_count: number;
+            driving_time_sum_ms: {
+              value: number;
+            };
+          };
+        };
+      }>
+    >(endpoint, query, {
+      headers,
+    })
+    .then(
+      (response) =>
+        response.data.aggregations.nested_reports.driving_time_sum_ms.value
+    );
+}
