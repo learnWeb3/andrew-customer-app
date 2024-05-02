@@ -1,6 +1,5 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { BusinessMetrics } from "./BusinessMetrics";
-import ArrowRightAltOutlinedIcon from "@mui/icons-material/ArrowRightAltOutlined";
 import { useRouter } from "next/router";
 
 export function HomeConcern() {

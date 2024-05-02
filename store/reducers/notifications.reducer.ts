@@ -2,6 +2,7 @@ import { Notification } from "../../lib/notification.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 import { diffTime } from "../../services/date-formatter.service";
+import { NotificationType } from "../../lib/notification-type.enum";
 
 const initialState: { value: Notification<any>[] } = {
   value: [],
@@ -28,5 +29,13 @@ export const { pushNotifications, clearNotifications } =
 
 export const selectNotifications = (state: RootState) =>
   state.notifications.value;
+
+export const selectNotificationsByType = (
+  state: RootState,
+  type: NotificationType
+) =>
+  state.notifications.value.filter(
+    (notification) => notification.type === type
+  );
 
 export default notificationsSlice.reducer;

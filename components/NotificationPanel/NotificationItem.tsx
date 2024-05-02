@@ -1,7 +1,6 @@
-import { Grid, IconButton, Paper, Typography } from "@mui/material";
+import { Grid, Paper, Typography } from "@mui/material";
 import { NotificationType } from "../../lib/notification-type.enum";
 import { timeElapsedSince } from "../../services/date-formatter.service";
-import OpenInNewOutlinedIcon from "@mui/icons-material/OpenInNewOutlined";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../store/hooks";
@@ -24,9 +23,14 @@ export function NotificationItem({
   const router = useRouter();
   let path: string = "";
   function handleClick() {
-    const path = `/applications/${data?._id}`;
-    router.push(path);
-    close();
+    if (type !== NotificationType.NEW_DEVICE_METRICS_REPORT_AVAILABLE) {
+      const path = `/applications/${data?._id}`;
+      router.push(path);
+      close();
+    } else {
+      router.reload();
+      close();
+    }
   }
   const [highLighted, sethighLighted] = useState<boolean>(false);
   const liveNotifications = useAppSelector(selectNotifications);
@@ -113,6 +117,15 @@ export function NotificationItem({
           NotificationType.SUBSCRIPTION_APPLICATION_STATUS_TO_AMMEND ? (
             <Typography variant="body2" gutterBottom>
               A subscription application must be ammended.
+            </Typography>
+          ) : (
+            false
+          )}
+
+          {type === NotificationType.NEW_DEVICE_METRICS_REPORT_AVAILABLE ? (
+            <Typography variant="body2" gutterBottom>
+              New data available, please refresh your dashboard in order to get
+              your latest insights !
             </Typography>
           ) : (
             false

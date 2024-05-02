@@ -29,7 +29,7 @@ export function LiveNotificationHandler({
     let client: MqttClient | null = null;
     function handleMessage(topic: string, message: Buffer) {
       const _message = JSON.parse(message.toString());
-      console.log(`==> received message`, message);
+      // console.log(`==> received message`, message);
       dispatch(pushNotifications([_message]));
     }
     function handleConnect() {
