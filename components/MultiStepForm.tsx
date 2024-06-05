@@ -44,7 +44,7 @@ export interface MultiStepFormStep<T> {
 }
 
 export interface MultiStepFormProps<T> {
-  data?: T;
+  data: T;
   setData: (newData: T) => void;
   save: (data: T) => Promise<void>;
   initialActiveStepIndex?: number;

@@ -10,7 +10,7 @@ export interface GreetNewUserMetricReportProps extends PropsWithChildren {}
 export function GreetNewUserMetricReport({
   children,
 }: GreetNewUserMetricReportProps) {
-  const GREET_TRESHOLD = 75;
+  const GREET_TRESHOLD = 0;
   const [toggled, setToggled] = useState<boolean>(false);
   const { width, height } = useWindowSize();
 

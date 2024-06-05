@@ -14,14 +14,6 @@ import { Paper } from "@mui/material";
 export interface InsuranceProductChoiceStepProps {
   data: UpdateSubscriptionApplicationData;
   setData: (newData: any) => void;
-  errors: { [field: string]: string[] };
-  setErrors: (
-    errors:
-      | { [field: string]: string[] }
-      | ((errors: { [field: string]: string[] }) => {
-          [field: string]: string[];
-        })
-  ) => void;
   save: (data: UpdateSubscriptionApplicationData) => Promise<void>;
   readOnly?: boolean;
 }
@@ -101,8 +93,6 @@ export default function InsuranceProductCard({
 export function InsuranceProductChoiceStep({
   data,
   setData = (newData: UpdateSubscriptionApplicationData) => {},
-  errors = {},
-  setErrors = (errors = {}) => {},
   save = async (data: UpdateSubscriptionApplicationData) => {},
   readOnly = false,
 }: InsuranceProductChoiceStepProps) {

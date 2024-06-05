@@ -12,9 +12,6 @@ export interface MapsAutocompleteTextFieldProps {
     country: string;
     postCode: string;
   }) => void;
-  setErrors: (errors: string[]) => void;
-  errors: string[];
-  validate: (value: any) => string[];
   readOnly?: boolean;
   id: string;
 }

@@ -9,12 +9,12 @@ export interface TextFieldProps {
   label?: string;
   helpertext?: string;
   value?: string;
-  handleInput: (value: any) => void;
+  handleInput?: (value: any) => void;
   setErrors: (errors: string[]) => void;
   errors: string[];
   validate: (value: any, options: { label: string }) => string[];
   readOnly?: boolean;
-  id: string;
+  id?: string;
   placeholder?: string;
 }
 export function TextField({
@@ -33,9 +33,10 @@ export function TextField({
     console.log(value);
     return [];
   },
-}) {
+}: TextFieldProps) {
   useEffect(() => {
-    setErrors(validate(value, { label }));
+    const _errors = validate(value, { label });
+    setErrors(_errors);
   }, [value]);
 
   return (

@@ -153,12 +153,22 @@ export function ApplicationsConcern({
 
   return (
     <Grid container spacing={2} alignItems="flex-start">
-       <Grid item xs={12} display={"flex"} alignItems={"center"} gap={1}>
-        <FolderOutlinedIcon color="inherit" />
-        <Typography variant="h6" component="h2">
-          Applications
-        </Typography>
-      </Grid>
+      {pendingSubscriptionApplicationsCount !== null ? (
+        <Grid
+          item
+          xs={pendingSubscriptionApplicationsCount <= 5 ? 6 : 12}
+          display={"flex"}
+          alignItems={"center"}
+          gap={1}
+        >
+          <FolderOutlinedIcon color="inherit" />
+          <Typography variant="h6" component="h2">
+            Applications
+          </Typography>
+        </Grid>
+      ) : (
+        false
+      )}
       {pendingSubscriptionApplicationsCount &&
       pendingSubscriptionApplicationsCount <= 5 ? (
         <Grid

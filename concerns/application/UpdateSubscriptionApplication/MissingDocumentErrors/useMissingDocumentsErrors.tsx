@@ -4,15 +4,19 @@ import { UpdateSubscriptionApplicationData } from "..";
 export function computeMissingVehiclesDocumentErrors(
   data: UpdateSubscriptionApplicationData
 ) {
-  const errors: string[] = data?.vehicles?.reduce((errors, vehicle, index) => {
-    if (!vehicle?.driverLicenceDocURL) {
-      errors.push(`Vehicle ${index + 1} missing driver license document`);
-    }
-    if (!vehicle?.vehicleRegistrationCardDocURL) {
-      errors.push(`Vehicle ${index + 1} missing registration card document`);
-    }
-    return errors;
-  }, [] as string[]);
+  const errors: string[] = data?.vehicles?.length
+    ? data.vehicles.reduce((errors, vehicle, index) => {
+        if (!vehicle?.driverLicenceDocURL) {
+          errors.push(`Vehicle ${index + 1} missing driver license document`);
+        }
+        if (!vehicle?.vehicleRegistrationCardDocURL) {
+          errors.push(
+            `Vehicle ${index + 1} missing registration card document`
+          );
+        }
+        return errors;
+      }, [] as string[])
+    : [];
   return errors;
 }
 

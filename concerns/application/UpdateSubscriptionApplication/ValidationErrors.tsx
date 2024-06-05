@@ -1,25 +1,15 @@
 import { Alert, AlertTitle } from "@mui/material";
-import { useEffect, useState } from "react";
 
 export interface ValidationErrorsProps {
-  errors: { [field: string]: string[] };
+  errors: string[];
 }
 
 export function ValidationErrors({ errors }: ValidationErrorsProps) {
-  const [globalErrors, setGlobalErrors] = useState<string[]>([]);
-  useEffect(() => {
-    setGlobalErrors(
-      Object.values(errors).reduce((errors, globalList) => {
-        globalList.push(...errors);
-        return globalList;
-      }, [])
-    );
-  }, [errors]);
-  return globalErrors?.length ? (
+  return errors?.length ? (
     <Alert severity="error">
       <AlertTitle>Validation errors</AlertTitle>
       <ul>
-        {globalErrors.map((error, index) => (
+        {errors.map((error, index) => (
           <li key={index}>{error}</li>
         ))}
       </ul>

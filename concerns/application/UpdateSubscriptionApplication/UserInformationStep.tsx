@@ -12,29 +12,52 @@ import { updateSubscriptionApplication } from "../../../services/andrew-api.serv
 import { removeEmptyKeys } from "../../../lib/remove-empty-keys.helper";
 import { ObjectStorageFileField } from "../../../components/ObjectStorageFileField";
 import { MapsAutocompleteTextField } from "../../../components/MapAutocompleteTextField";
+import { Dispatch, SetStateAction } from "react";
 
-export interface ContactInformationStepProps {
+export interface UserInformationStepProps {
   data: UpdateSubscriptionApplicationData;
-  errors: { [field: string]: string[] };
-  setErrors: (
-    errors:
-      | { [field: string]: string[] }
-      | ((errors: { [field: string]: string[] }) => {
-          [field: string]: string[];
-        })
-  ) => void;
+  firstNameErrors: string[];
+  setFirstNameErrors: Dispatch<SetStateAction<string[]>>;
+  lastNameErrors: string[];
+  setLastNameErrors: Dispatch<SetStateAction<string[]>>;
+  emailErrors: string[];
+  setEmailErrors: Dispatch<SetStateAction<string[]>>;
+  phoneNumberErrors: string[];
+  setPhoneNumberErrors: Dispatch<SetStateAction<string[]>>;
+  addressErrors: string[];
+  setAddressErrors: Dispatch<SetStateAction<string[]>>;
+  cityErrors: string[];
+  setCityErrors: Dispatch<SetStateAction<string[]>>;
+  postCodeErrors: string[];
+  setPostCodeErrors: Dispatch<SetStateAction<string[]>>;
+  countryErrors: string[];
+  setCountryErrors: Dispatch<SetStateAction<string[]>>;
   setData: (newData: UpdateSubscriptionApplicationData) => void;
   save: (data: UpdateSubscriptionApplicationData) => Promise<void>;
   readOnly?: boolean;
 }
 export function UserInformationStep({
   data,
-  errors = {},
-  setErrors = (errors = {}) => {},
+  firstNameErrors,
+  setFirstNameErrors,
+  lastNameErrors,
+  setLastNameErrors,
+  emailErrors,
+  setEmailErrors,
+  phoneNumberErrors,
+  setPhoneNumberErrors,
+  addressErrors,
+  setAddressErrors,
+  cityErrors,
+  setCityErrors,
+  postCodeErrors,
+  setPostCodeErrors,
+  countryErrors,
+  setCountryErrors,
   setData = (newData: UpdateSubscriptionApplicationData) => {},
   save = async (data: UpdateSubscriptionApplicationData) => {},
   readOnly = false,
-}: ContactInformationStepProps) {
+}: UserInformationStepProps) {
   const { accessToken } = useOidcAccessToken();
 
   async function handleIdCardFilePathChange(filePath: string) {
@@ -91,13 +114,8 @@ export function UserInformationStep({
           id="lastName"
           validate={validateRequired}
           value={data?.billingInformations?.lastName}
-          errors={(errors.lastName as any) || []}
-          setErrors={(_errors) =>
-            setErrors((errors) => ({
-              ...errors,
-              lastName: _errors,
-            }))
-          }
+          errors={lastNameErrors}
+          setErrors={setLastNameErrors}
           handleInput={(value) => {
             setData({
               ...data,
@@ -117,13 +135,8 @@ export function UserInformationStep({
           id="firstName"
           validate={validateRequired}
           value={data?.billingInformations?.firstName}
-          errors={(errors.firstName as any) || []}
-          setErrors={(_errors) =>
-            setErrors({
-              ...errors,
-              firstName: _errors,
-            })
-          }
+          errors={firstNameErrors}
+          setErrors={setFirstNameErrors}
           handleInput={(value) => {
             setData({
               ...data,
@@ -154,7 +167,9 @@ export function UserInformationStep({
             SAVE
           </Button>
         </Grid>
-      ) : false}
+      ) : (
+        false
+      )}
 
       <Grid item xs={12}>
         <Typography gutterBottom variant="subtitle2">
@@ -167,13 +182,8 @@ export function UserInformationStep({
           id="email"
           validate={validateEmail}
           value={data?.contactInformations?.email}
-          errors={(errors.email as any) || []}
-          setErrors={(_errors) =>
-            setErrors((errors) => ({
-              ...errors,
-              email: _errors,
-            }))
-          }
+          errors={emailErrors}
+          setErrors={setEmailErrors}
           handleInput={(value) => {
             setData({
               ...data,
@@ -193,13 +203,8 @@ export function UserInformationStep({
           id="phoneNumber"
           validate={validateMobilePhone}
           value={data.contactInformations?.phoneNumber}
-          errors={(errors.phoneNumber as any) || []}
-          setErrors={(_errors) =>
-            setErrors((errors) => ({
-              ...errors,
-              phoneNumber: _errors,
-            }))
-          }
+          errors={phoneNumberErrors}
+          setErrors={setPhoneNumberErrors}
           handleInput={(value) => {
             setData({
               ...data,
@@ -225,7 +230,9 @@ export function UserInformationStep({
             SAVE
           </Button>
         </Grid>
-      ) : false}
+      ) : (
+        false
+      )}
       <Grid item xs={12}>
         <Typography gutterBottom variant="subtitle2">
           Residency
@@ -236,15 +243,7 @@ export function UserInformationStep({
           <MapsAutocompleteTextField
             label="Start typing your address in here..."
             id="address"
-            validate={validateRequired}
             value={data?.billingInformations?.address}
-            errors={(errors.address as any) || []}
-            setErrors={(_errors) =>
-              setErrors((errors) => ({
-                ...errors,
-                address: _errors,
-              }))
-            }
             handleInput={(value) => {
               setData({
                 ...data,
@@ -261,20 +260,17 @@ export function UserInformationStep({
             }}
           />
         </Grid>
-      ) : false}
+      ) : (
+        false
+      )}
       <Grid item xs={12}>
         <TextField
           label="Address"
           id="address"
           validate={validateRequired}
           value={data?.billingInformations?.address}
-          errors={(errors.address as any) || []}
-          setErrors={(_errors) =>
-            setErrors((errors) => ({
-              ...errors,
-              address: _errors,
-            }))
-          }
+          errors={addressErrors}
+          setErrors={setAddressErrors}
           readOnly={true}
         />
       </Grid>
@@ -284,13 +280,8 @@ export function UserInformationStep({
           id="city"
           validate={validateRequired}
           value={data?.billingInformations?.city}
-          errors={(errors.city as any) || []}
-          setErrors={(_errors) =>
-            setErrors((errors) => ({
-              ...errors,
-              city: _errors,
-            }))
-          }
+          errors={cityErrors}
+          setErrors={setCityErrors}
           readOnly={true}
         />
       </Grid>
@@ -300,13 +291,8 @@ export function UserInformationStep({
           id="postCode"
           validate={validateRequired}
           value={data?.billingInformations?.postCode}
-          errors={(errors.postCode as any) || []}
-          setErrors={(_errors) =>
-            setErrors((errors) => ({
-              ...errors,
-              postCode: _errors,
-            }))
-          }
+          errors={postCodeErrors}
+          setErrors={setPostCodeErrors}
           readOnly={true}
         />
       </Grid>
@@ -316,13 +302,8 @@ export function UserInformationStep({
           id="country"
           validate={validateRequired}
           value={data?.billingInformations?.country}
-          errors={(errors.country as any) || []}
-          setErrors={(_errors) =>
-            setErrors((errors) => ({
-              ...errors,
-              country: _errors,
-            }))
-          }
+          errors={countryErrors}
+          setErrors={setCountryErrors}
           readOnly={true}
         />
       </Grid>
@@ -339,7 +320,9 @@ export function UserInformationStep({
             SAVE
           </Button>
         </Grid>
-      ) : false}
+      ) : (
+        false
+      )}
 
       <Grid item xs={12}>
         <Typography gutterBottom variant="subtitle2">

@@ -3,19 +3,11 @@ import { UpdateSubscriptionApplicationData } from ".";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { ApplicationStatus } from "../../../lib/application-status.enum";
-import { useEffect, useState } from "react";
 import { useMissingDocumentsErrors } from "./MissingDocumentErrors/useMissingDocumentsErrors";
 
 export interface ChangesValidationStepProps {
   data: UpdateSubscriptionApplicationData;
-  errors: { [field: string]: string[] };
-  setErrors: (
-    errors:
-      | { [field: string]: string[] }
-      | ((errors: { [field: string]: string[] }) => {
-          [field: string]: string[];
-        })
-  ) => void;
+  errors: string[];
   setData: (newData: any) => void;
   pay: (data: UpdateSubscriptionApplicationData) => Promise<void>;
   save: (data: UpdateSubscriptionApplicationData) => Promise<void>;
@@ -28,17 +20,9 @@ export function ChangesValidationStep({
   save = async (data: UpdateSubscriptionApplicationData) => {},
   pay = async (data: UpdateSubscriptionApplicationData) => {},
   review = async (data: UpdateSubscriptionApplicationData) => {},
-  errors = {},
-  setErrors = (errors = {}) => {},
+  errors = [],
   readOnly = false,
 }: ChangesValidationStepProps) {
-  const [globalErrors, setGlobalErrors] = useState<string[]>([]);
-  useEffect(() => {
-    Object.values(errors).reduce((errors, globalList) => {
-      globalList.push(...errors);
-      return globalList;
-    }, []);
-  }, [errors]);
   const {
     missingIdentityDocumentsErrors,
     missingContractsDocumentsErrors,
@@ -70,7 +54,7 @@ export function ChangesValidationStep({
             }}
             variant="contained"
             disabled={
-              globalErrors?.length ||
+              errors?.length ||
               missingContractsDocumentsErrors?.length ||
               missingIdentityDocumentsErrors?.length ||
               missingVehiclesDocumentsErrors?.length ||
@@ -82,7 +66,9 @@ export function ChangesValidationStep({
           >
             Ask for review
           </Button>
-        ) : false}
+        ) : (
+          false
+        )}
 
         {data?.status === ApplicationStatus.PAYMENT_PENDING ? (
           <Button
@@ -92,7 +78,7 @@ export function ChangesValidationStep({
             size="large"
             color="success"
             disabled={
-              globalErrors?.length ||
+              errors?.length ||
               missingContractsDocumentsErrors?.length ||
               missingIdentityDocumentsErrors?.length ||
               missingVehiclesDocumentsErrors?.length ||
@@ -104,7 +90,9 @@ export function ChangesValidationStep({
           >
             Pay
           </Button>
-        ) : false}
+        ) : (
+          false
+        )}
       </Grid>
     </Grid>
   ) : null;

@@ -31,7 +31,7 @@ export function VehiclesInformationsStep({
     setData({
       ...data,
       vehicles: [
-        ...data.vehicles,
+        ...(data?.vehicles?.length ? data.vehicles : []),
         {
           vin: "",
           brand: "",

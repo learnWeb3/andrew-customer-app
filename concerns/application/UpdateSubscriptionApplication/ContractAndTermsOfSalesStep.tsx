@@ -7,14 +7,6 @@ import { ContractDownloadField } from "../ContractDownloadField";
 
 export interface ContractAndTermsOfSalesStepProps {
   data: UpdateSubscriptionApplicationData;
-  errors: { [field: string]: string[] };
-  setErrors: (
-    errors:
-      | { [field: string]: string[] }
-      | ((errors: { [field: string]: string[] }) => {
-          [field: string]: string[];
-        })
-  ) => void;
   setData: (newData: any) => void;
   save: (data: UpdateSubscriptionApplicationData) => Promise<void>;
   readOnly?: boolean;
@@ -23,8 +15,6 @@ export function ContractAndTermsOfSalesStep({
   data,
   setData = (newData: UpdateSubscriptionApplicationData) => {},
   save = async (data: UpdateSubscriptionApplicationData) => {},
-  errors = {},
-  setErrors = (errors = {}) => {},
   readOnly = false,
 }: ContractAndTermsOfSalesStepProps) {
   async function handleContractFilePathChange(filePath: string) {

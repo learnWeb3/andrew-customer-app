@@ -2,6 +2,7 @@ import { Box, Paper, Typography } from "@mui/material";
 import { GridSaveAltIcon } from "@mui/x-data-grid";
 import { Link as MUILink } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
+import Link from "next/link";
 
 export function ContractDownloadField() {
   return (
@@ -35,7 +36,6 @@ export function ContractDownloadField() {
         justifyContent={"flex-start"}
         gap={1}
         sx={{ cursor: "pointer" }}
-        // onClick={handleDownloadFile}
       >
         <GridSaveAltIcon />
         <MUILink
@@ -45,7 +45,7 @@ export function ContractDownloadField() {
           color="inherit"
           typography={"button"}
         >
-          Download contract blueprint
+          <Link href={"/doc/contract.pdf"}>Download contract blueprint</Link>
         </MUILink>
       </Box>
     </Paper>

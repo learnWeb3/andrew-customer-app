@@ -1,22 +1,12 @@
 [
-    {
-       "origin": ["http://localhost:3000"],
-       "method": ["GET", "PUT"],
-       "responseHeader": ["*"]
-    },
-    {
-       "origin": ["http://localhost:3001"],
-       "method": ["GET", "PUT"],
-       "responseHeader": ["*"]
-    },
-    {
-      "origin": ["https://andrew.insurer.students-epitech.ovh"],
-      "method": ["GET", "PUT"],
-      "responseHeader": ["*"]
-    },
-    {
-      "origin": ["https://andrew.customers.students-epitech.ovh"],
-      "method": ["GET", "PUT"],
-      "responseHeader": ["*"]
-    }
+  {
+    "origin": ["http://localhost:3001"],
+    "method": ["GET"],
+    "responseHeader": ["*"]
+  },
+  {
+    "origin": ["https://text-converter.students-epitech.ovh"],
+    "method": ["GET"],
+    "responseHeader": ["*"]
+  }
 ]

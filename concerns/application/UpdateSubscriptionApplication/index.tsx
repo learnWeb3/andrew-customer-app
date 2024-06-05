@@ -1,5 +1,9 @@
 import { Grid } from "@mui/material";
-import { MultiStepForm } from "../../../components/MultiStepForm";
+import {
+  MultiStepForm,
+  MultiStepFormProps,
+  MultiStepFormStep,
+} from "../../../components/MultiStepForm";
 import { UserInformationStep } from "./UserInformationStep";
 import { InsuranceProductChoiceStep } from "./InsuranceProductChoiceStep";
 import { VehiclesInformationsStep } from "./VehiclesInformationsStep";
@@ -74,16 +78,53 @@ export interface UpdateSubscriptionApplicationData {
   }[];
 }
 
+export function UpdateSubscriptionUserInformations(
+  props: MultiStepFormProps<UpdateSubscriptionApplicationData>
+) {
+  const [firstNameErrors, setFirstNameErrors] = useState<string[]>([]);
+  const [lastNameErrors, setLastNameErrors] = useState<string[]>([]);
+  const [emailErrors, setEmailErrors] = useState<string[]>([]);
+  const [phoneNumberErrors, setPhoneNumberErrors] = useState<string[]>([]);
+
+  const [addressErrors, setAddressErrors] = useState<string[]>([]);
+  const [cityErrors, setCityErrors] = useState<string[]>([]);
+  const [postCodeErrors, setPostCodeErrors] = useState<string[]>([]);
+  const [countryErrors, setCountryErrors] = useState<string[]>([]);
+
+  return (
+    <UserInformationStep
+      save={props.save}
+      data={props.data}
+      setData={props.setData}
+      firstNameErrors={firstNameErrors}
+      setFirstNameErrors={setFirstNameErrors}
+      lastNameErrors={lastNameErrors}
+      setLastNameErrors={setLastNameErrors}
+      emailErrors={emailErrors}
+      setEmailErrors={setEmailErrors}
+      phoneNumberErrors={phoneNumberErrors}
+      setPhoneNumberErrors={setPhoneNumberErrors}
+      addressErrors={addressErrors}
+      setAddressErrors={setAddressErrors}
+      cityErrors={cityErrors}
+      setCityErrors={setCityErrors}
+      postCodeErrors={postCodeErrors}
+      setPostCodeErrors={setPostCodeErrors}
+      countryErrors={countryErrors}
+      setCountryErrors={setCountryErrors}
+    />
+  );
+}
 export function UpdateSubscriptionApplication({
   application = null,
   setApplication = (application) => {},
   mb = 0,
 }: UpdateSubscriptionApplicationProps) {
   const router = useRouter();
-  const steps = [
+  const steps: MultiStepFormStep<UpdateSubscriptionApplicationData>[] = [
     {
       title: "User informations",
-      component: UserInformationStep,
+      component: UpdateSubscriptionUserInformations,
       validate: (data: UpdateSubscriptionApplicationData) => {
         const errors = [];
         if (!data.billingInformations?.address) {
@@ -103,6 +144,12 @@ export function UpdateSubscriptionApplication({
         }
         if (!data.billingInformations?.firstName) {
           errors.push("Missing firstName");
+        }
+        if (!data.contactInformations?.email) {
+          errors.push("Missing Email");
+        }
+        if (!data.contactInformations?.phoneNumber) {
+          errors.push("Missing phone number");
         }
         errors.push(...computeMissingIdentityDocumentErrors(data));
         return {
@@ -132,31 +179,33 @@ export function UpdateSubscriptionApplication({
         const errors = [];
         errors.push(...computeMissingVehiclesDocumentErrors(data));
         errors.push(
-          ...data?.vehicles?.reduce((errors, vehicle, index) => {
-            if (!vehicle?.brand) {
-              errors.push(`Vehicle ${index + 1} missing brand`);
-            }
-            if (!vehicle?.model) {
-              errors.push(`Vehicle ${index + 1} missing brand`);
-            }
-            if (!vehicle?.contractSubscriptionKm) {
-              errors.push(
-                `Vehicle ${index + 1} missing contract subscription Km`
-              );
-            }
-            if (!vehicle?.originalInServiceDate) {
-              errors.push(
-                `Vehicle ${index + 1} missing original in service data`
-              );
-            }
-            if (!vehicle?.vin) {
-              errors.push(`Vehicle ${index + 1} missing vin`);
-            }
-            if (!vehicle?.year) {
-              errors.push(`Vehicle ${index + 1} missing model year`);
-            }
-            return errors;
-          }, [] as string[])
+          ...(data?.vehicles?.length
+            ? data.vehicles.reduce((errors, vehicle, index) => {
+                if (!vehicle?.brand) {
+                  errors.push(`Vehicle ${index + 1} missing brand`);
+                }
+                if (!vehicle?.model) {
+                  errors.push(`Vehicle ${index + 1} missing brand`);
+                }
+                if (!vehicle?.contractSubscriptionKm) {
+                  errors.push(
+                    `Vehicle ${index + 1} missing contract subscription Km`
+                  );
+                }
+                if (!vehicle?.originalInServiceDate) {
+                  errors.push(
+                    `Vehicle ${index + 1} missing original in service data`
+                  );
+                }
+                if (!vehicle?.vin) {
+                  errors.push(`Vehicle ${index + 1} missing vin`);
+                }
+                if (!vehicle?.year) {
+                  errors.push(`Vehicle ${index + 1} missing model year`);
+                }
+                return errors;
+              }, [] as string[])
+            : [])
         );
         return {
           errors: errors.sort((a, b) => a.localeCompare(b)),
